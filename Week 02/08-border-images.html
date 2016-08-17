@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8"/>
+		<title>Awesome CSS3 Features You Can Finally Use</title>
+
+		<link href="assets/css/style.css" rel="stylesheet" />
+
+		<style>
+			
+			p{
+
+				text-align:center;
+				padding:30px;
+				margin: 20px;
+				border:30px solid transparent;
+			}
+			
+			img{
+				padding: 20pxpx;
+				margin: 20px;
+			}
+
+			
+			p.repeat{
+				border-image:url("assets/img/border2.png") 33% 33% 33% 33% repeat;
+			}
+			
+			p.round{
+				border-image:url("assets/img/border2.png") 16.5% 16.5% 16.5% 16.5% round;
+			}
+			
+			p.stretch{
+				border-image:url("assets/img/border2.png") 40% 40% 40% 40% stretch;
+			}
+			
+			p.stretch2{
+				border-image:url("assets/img/border2.png") 40% 40% 40% 40% stretch;
+				width: 300px;
+			}
+			
+			div div{
+				margin-left: 33px; 
+			}
+			
+
+		</style>
+
+	</head>
+
+	<body>
+
+		<h1>Border Images</h1>
+		<div>
+			<div>Original Image (chosen to demonstrate border-image NOT for its inherent beauty!!!)</div>
+			<img src="assets/img/border2.png" />
+		</div>
+		<p class="repeat">border-image:url("assets/img/border2.png") 33 33 33 33 repeat;</p>
+		<p class="round">border-image:url("assets/img/border2.png") 16.5% 16.5% 16.5% 16.5% round;</p>
+		<p class="stretch">border-image:url("assets/img/border2.png") 40% 40% 40% 40% stretch;</p>
+		<p class="stretch2">border-image:url("assets/img/border2.png") 40% 40% 40% 40% stretch;</p>
+
+		<footer>
+            <a href="http://tutorialzine.com/2013/10/12-awesome-css3-features-you-can-finally-use/">Awesome CSS3 Features You Can Finally Use</a>
+        </footer>
+
+	</body>
+</html>

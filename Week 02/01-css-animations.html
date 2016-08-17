@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8"/>
+		<title>Awesome CSS3 Features You Can Finally Use</title>
+
+		<link href="assets/css/style.css" rel="stylesheet" />
+
+		<style>
+			/*container contains planet and rocket, all 3 effectively overlap*/
+			.container{
+				width: 300px;
+				height:300px;
+				margin: 0 auto; /*top/bottom = 0 left/right = auto i.e. center*/
+				position: relative;
+				
+				/*border: 1px solid black; */		/*analysis*/
+			}
+
+			.planet{
+				position:absolute;
+				top:0;
+				left:0;
+				width:100%;
+				height:100%;
+				background:url(assets/img/planet.png) no-repeat center center;
+				
+				/*border: 1px dashed red; */		/*analysis*/
+			}
+
+			.rocket{
+				position:absolute;
+				top:0;
+				left:0;
+				width:100%;
+				height:100%;
+				background:url(assets/img/rocket.png) no-repeat 5px center;
+
+				/* Webkit still requires the -webkit- prefix */
+				-webkit-animation:orbit 2s linear infinite;
+				animation:orbit 2s linear infinite;		/*animation triggered when this style is applied to rocket div i.e. during load*/
+
+				background-position: 5px center; 		/*center is the y coordinate value (saves us calculating) - so image placed at (5, center), origin is top left*/
+				transition: background-position 2s; 	/*counter intuitive, transition applied to start style not end style - if background-position is changed the change will take 2 secs*/
+				
+				/*border: 1px solid black; */		/*analysis*/
+			}
+
+			/* background-position is now changed - rocket moves from extreme left (5px) to less extreme left (80px) when container is hovered over*/
+			.container:hover .rocket{
+				background-position: 80px center;		/*center is the y coordinate value (saves us calculating) - so image placed at (80, center), origin is top left*/
+			}
+
+			/* Define the keyframes of the animation */
+
+			@-webkit-keyframes orbit {
+				from {
+					-webkit-transform:rotate(0deg);}
+				to {
+					-webkit-transform:rotate(360deg);
+				}
+			}
+
+			@keyframes orbit {
+				from {
+					transform:rotate(0deg);
+
+					/* I am including the -webkit-transform properties, because
+					   Chrome might start supporting keyframe without prefix in the future,
+					   but we can't be certain whether it will support prefix-free transform
+					   at the same time */
+
+					-webkit-transform:rotate(0deg);}
+				to {
+					transform:rotate(360deg);
+					-webkit-transform:rotate(360deg);
+				}
+			}
+		</style>
+
+	</head>
+
+	<body>
+
+		<h1>CSS Animations And Transitions</h1>
+
+		<div class="container">
+
+			<div class="planet"></div>
+			<div class="rocket"></div>
+
+		</div>
+
+		<footer>
+			<a href="http://tutorialzine.com/2013/10/12-awesome-css3-features-you-can-finally-use/">Awesome CSS3 Features You Can Finally Use</a>
+		</footer>
+
+	</body>
+</html>

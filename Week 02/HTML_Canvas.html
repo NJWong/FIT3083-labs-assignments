@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Animation</title>
+
+<style>
+	body {
+		font-family: Verdana;
+		font-size: small;
+	}
+	
+	canvas {
+		cursor: pointer;
+		border: 1px solid black;
+		float: left;
+		margin: 1em;
+	}
+
+	div {
+		margin: 15px 0px;
+	}
+
+	button {
+		padding: 4px 10px;
+		margin: 1em;
+	}
+
+	input[type=number] {
+		width: 50px;
+		margin-right: 15px;
+	}
+</style>
+
+
+<script>
+
+	// ball constructor function
+	function Ball(x, y, dx, dy, radius) {
+		this.x = x;
+		this.y = y;
+		this.dx = dx;
+		this.dy = dy;
+		this.radius = radius;
+		this.strokeColor = "black";
+		this.fillColor = "red";
+	}
+
+	// This is an array that will hold all the balls on the canvas
+	var balls = [];
+
+	var canvas;
+	var context;
+
+	window.onload = function() {								//executes when the page has finished loading specifically the DOM is created
+		canvas = document.getElementById("canvas");	//get a programming reference to the HTML canvas element
+		context = canvas.getContext("2d");					//all 2d drawing is done by setting properties of and invoking methods on the rendering context
+		
+		canvasSimple = document.getElementById("canvasSimple");	
+		contextSimple = canvasSimple.getContext("2d"); 
+		simpleDrawing(contextSimple);
+
+		canvas.onmousedown = canvasClick;					//register an event handler for mouse down on canvas (give ball a speed kick)
+
+		setTimeout(drawFrame, 20);								//execute the function drawFrame after 20 milliseconds (it will repeatedly execute because drawFrame contains the same call)
+	};
+	
+
+
+	function addBall() {												//add ball button event handler
+		// Get the requested size.
+		var radius = parseFloat(document.getElementById("ballSize").value);
+
+		// Create the new ball instance using constructor function
+		var ball = new Ball(50, 50, 1, 1, radius);
+
+		// store at current end of ball array
+		balls.push(ball);												//it will be included in drawing of next frame
+	}
+
+	function clearBalls() {										//clear canvas button event handler
+	  balls = []; 														//nothing for drawFrame to draw
+	}
+
+
+	function drawFrame() {										//draw all balls in the balls array
+	  // Clear the canvas. This is traditional frame-by-frame animation i.e. the entire scene is drawn for each frame
+	  context.clearRect(0, 0, canvas.width, canvas.height);
+
+	  // Note that you need to call beginPath() to make sure you don't redraw part of what
+	  // you were drawing before.
+	  context.beginPath();
+
+	  // for each ball in the array balls.
+	  for(var i = 0; i < balls.length; i++) {
+		// Move each ball to its new position.
+		var ball = balls[i];
+		
+		ball.x += ball.dx;
+		ball.y += ball.dy;
+
+		// Add in a "gravity" effect that makes the ball fall faster on the way down and slower on the way up.
+		if ((ball.y) < canvas.height) ball.dy += 0.22;
+
+		// Add in a "friction" effect that slows down the ball's side-to-side motion.
+		ball.dx = ball.dx * 0.998;
+
+		// If the ball has hit the side, bounce it.
+		if ((ball.x + ball.radius > canvas.width) || (ball.x - ball.radius < 0)) {
+		  ball.dx = -ball.dx;
+		}
+
+		// If the ball has hit the bottom, bounce it, but slow it down slightly.
+		if ((ball.y + ball.radius > canvas.height) || (ball.y - ball.radius < 0)) { 
+			ball.y = canvas.height - ball.radius;
+			if (Math.abs(ball.dy) < 1.2){ //stop endless bouncing
+				//ball.y = canvas.height - ball.radius;
+				//ball.dx = 0.0;
+				//ball.dy = 0.0;
+			}
+			else
+				ball.dy = -ball.dy*0.80;
+		}
+		
+		//console.log(ball.dy);
+
+		// Check if the user wants lines.
+		if (!document.getElementById("connectedBalls").checked) {
+			context.beginPath();
+			context.fillStyle = ball.fillColor;
+		}
+		else {
+			context.fillStyle = "white";
+		}
+
+		// Draw the ball.
+		context.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+		context.lineWidth = 1;
+		context.fill();
+		context.stroke(); 
+	}
+
+	  // drawFrame executes repeatedly - note this is not a recursive call - setTimeOut is asynchronous i.e. drawFrame completes after issuing the setTimeout delay
+	  setTimeout(drawFrame, 20);
+	}
+
+	function canvasClick(e) {								//e object contains system supplied details of the event that caused this function to execute (registered above for mouse down on canvas)
+		// Get the canvas click coordinates.
+		var clickX = e.pageX - canvas.offsetLeft;
+		var clickY = e.pageY - canvas.offsetTop;
+
+
+		// Look for the clicked ball.
+		for(var i in balls) {
+			var ball = balls[i];
+			if ((clickX > (ball.x-ball.radius)) && (clickX < (ball.x+ball.radius))){
+				if ((clickY > (ball.y-ball.radius)) && (clickY < (ball.y+ball.radius))){
+					// Change the clicked ball's speed.
+					ball.dx -= 2;
+					ball.dy -= 3;
+					return;
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	//=================================================================
+		function simpleDrawing(cc){		
+		
+			//drawing rectangles
+			cc.fillStyle = "#00ffff";
+			cc.fillRect(25,25,100,100);
+			cc.clearRect(45,45,40,40);
+			cc.strokeRect(50,50,30,30);
+			cc.fillStyle = "#00ff00";
+			cc.fillRect(55,55,20,20);
+	
+			//drawing a triangle path
+			cc.fillStyle = "#4488ff";
+			cc.beginPath();
+			cc.moveTo(250,80);
+			cc.lineTo(275,105);
+			cc.lineTo(275,55);						//start point if previous sub-path end point
+			cc.fill();										//implicit closePath() which implicitly joins end to start - TRY REPLACING WITH stroke()
+			//cc.stroke();
+			
+			
+			//drawing a smiley face - if you need to change context properties you need to start a new path
+			cc.beginPath(); cc.lineWidth = 1; cc.lineStyle = "#ffffff";
+			cc.arc(75,205,50,0,Math.PI*2,true); // head
+			cc.stroke();
+			
+			cc.beginPath(); cc.lineWidth = 5; cc.strokeStyle = "#ff0000";
+			cc.moveTo(110,205);
+			cc.arc(75,205,35,0,Math.PI,false);   // Mouth (clockwise)
+			cc.stroke();
+			
+			//note:both eyes for 1 path 
+			cc.beginPath(); cc.lineWidth = 2; cc.strokeStyle = "#0000ff";
+			cc.moveTo(65,195);
+			cc.arc(60,195,5,0,Math.PI*2,true);  // Left eye
+			cc.moveTo(95,195);
+			cc.arc(90,195,5,0,Math.PI*2,true);  // Right eye
+			cc.stroke();
+			
+			//
+			// Filled triangle
+			cc.beginPath();
+			cc.moveTo(225,175);
+			cc.lineTo(305,175);
+			cc.lineTo(225,255);
+			cc.fill();									//implicit closePath() which implicitly joins end to start - TRY REPLACING WITH stroke()
+			//cc.stroke();
+
+			// Stroked triangle
+			cc.beginPath();
+			cc.moveTo(325,275);
+			cc.lineTo(325,195);
+			cc.lineTo(245,275);
+			cc.closePath();
+			cc.stroke();
+	}
+</script>
+
+  
+</head>
+
+<body>
+
+	<canvas id="canvasSimple" width="400" height="300"></canvas>
+	
+	<div>
+		<canvas id="canvas" width="400" height="300"></canvas>
+		
+		<div>
+			<button onclick="addBall()">Add Ball</button>
+			<button onclick="clearBalls()">Clear Canvas</button>
+		</div>
+		
+		<div>
+			Ball Size:<input id="ballSize" type="number" min="0" max="50" value="15">
+			<input id="connectedBalls" type="checkbox">Connect Balls<br>
+		</div>
+	</div>
+	
+</body>
+
+</html>

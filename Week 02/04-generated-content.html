@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8"/>
+		<title>Awesome CSS3 Features You Can Finally Use</title>
+
+		<link href="assets/css/style.css" rel="stylesheet" />
+
+		<style>
+			.container{
+
+				/* Set a counter named cnt to 0 */
+				counter-reset: cnt;							/* !!!!! */
+
+				position:relative;
+				text-align:center;
+				padding:20px 0;
+				width:420px;
+				height: 160px;
+				margin: 0 auto;
+				border: 1px solid black;						/* analysis */
+			}
+
+			/* You can style pseudo elements and give them content using ::before and ::after, as if they were real elements on the page */
+			/* ::before and ::after create a pseudo-element that is the first/last child of the selected element (in this case the div element) */
+
+			.container::before{								/*inserted as first child of element(s) selected by .container */
+				display: block;
+				content:'Hover over these items:';		/* content (i.e. generated content) can only be used with ::before and ::after */
+				font-size:18px;
+				font-weight:bold;
+				text-align:center;
+				padding:15px;
+			}
+
+			.container span{
+				display:inline-block;							/* generates a block element flowed as if it were an inline block (like img) */
+				padding:2px 6px;
+				background-color:#78CCD2;
+				color:#186C72;
+				border-radius:4px;
+				margin:3px;
+				cursor:default;
+			}
+
+			/* Create a counter with a pseudo element */
+
+			.container span::after{							/* insert pseudo-element as last child of each span with parent that has class .container i.e. 4 insertions as there are 4 such spans */
+
+				/* Every time this rule is executed, the counter value is increased by 1 */
+				/* it's executed 4 times - once per span presumably in document order */
+				counter-increment: cnt;					/* !!!!! */
+
+				/* Add the counter value as part of the content */
+				content:" #" counter(cnt) ".";			/* counter() function displays the counter - note this is not string concat but 2 text children*/
+
+				display:inline-block;
+				padding:4px;
+			}
+
+			/* Pseudo elements can even access attributes of their parent element */
+			/* ::before and ::after create a pseudo-element that is the first/last child of the !!!selected!!! element (in this case the span element) */			
+
+			.container span::before{				/* can't use after:: on span as it will overwrite the ::after span pseudo-element created above - so use before and bottom instead */
+				position:absolute;
+				bottom:0;									/* if position is absolute (which it is) 0 is the distance between psuedo-element's bottom margin and its container block's bottom margin*/
+				left:0;
+				width:100%;
+				content:attr(data-title);				/* when attr() function is used on a pseudo element it refers to the originating real parent element's attributes */
+				color:#666;
+				
+				opacity:0;									/* for transition away from and to*/
+
+				/* Animate the transitions - make the text gradually appear on hover and gradually disappear when hover removed */
+				-webkit-transition:opacity 2.0s;
+				transition:opacity 2.0s;
+			}
+
+			.container span:hover:before{
+				opacity:1;
+			}
+
+		</style>
+
+	</head>
+
+	<body>
+
+		<h1>Generated Content</h1>
+
+		<div class="container">
+			<span data-title="These titles are shown only using CSS, no JavaScript is used!">This is item</span>
+			<span data-title="span 2">This is item</span>
+			<span data-title="span 3">This is item</span>
+			<span data-title="span 4">This is item</span>
+		</div>
+
+
+		<footer>
+            <a href="http://tutorialzine.com/2013/10/12-awesome-css3-features-you-can-finally-use/">Awesome CSS3 Features You Can Finally Use</a>
+        </footer>
+
+	</body>
+</html>

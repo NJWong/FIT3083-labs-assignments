@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+
+	<title>Card Flip</title>
+
+	<link rel="stylesheet" href="assetsFor13/style.css" media="screen" />
+
+
+	<style media="screen">					/* 3D Space - set a common perspective (and vanishing point) for all objects within the space */
+		.container {
+			width: 200px;
+			height: 260px;
+			position: relative;
+			margin: 0 auto 40px;
+			border: 1px solid #CCC;
+
+			perspective: 800px;
+		}
+
+		#card {										/* a wrapper for the panels making up the 3D object - it's this that will flip */
+			width: 100%;
+			height: 100%;
+			position: absolute;
+
+			transition: transform 1s;
+
+			transform-style: preserve-3d;
+			
+			transform-origin: right center;							/* #####1of2 implements a slide flip - pivot point is RHS of the card which under transform is dragged to left edge */
+		}
+
+		
+		/* when this class is added/removed from the wrapper the card (front panel + back panel) will flip/back flip */
+		/* #####1of1 implements a flip about card's central axis  */
+		/*
+		#card.flipped {
+			transform: rotateY( 180deg );									
+		}
+		*/
+		
+		/* #####1of2 implements a slide flip */
+		
+		#card.flipped {
+			transform: translateX(-100%) rotateY( -180deg );	
+		}
+		
+
+
+		
+
+		#card figure {								/* common panel property settings */
+			display: block;
+			height: 100%;
+			width: 100%;
+			line-height: 260px;
+			color: white;
+			text-align: center;
+			font-weight: bold;
+			font-size: 140px;
+			position: absolute;
+
+			backface-visibility: hidden;		/*don't want to see the back of either card since they really are 2 sides of just one card */
+		}
+
+		#card .front {								/* specific front panel property settings */
+			background: red;
+		}
+
+		#card .back {								/* specific back panel property settings */
+			background: blue;
+			transform: rotateY( 180deg );	/* turn back panel around to face backwards initially */
+		}
+	
+	</style>
+
+</head>
+
+<body>
+
+	<h1>Card Flip (centre flip and slide-flip)</h1>
+
+	<section class="container">
+		<div id="card">
+			<figure class="front">1</figure>
+			<figure class="back">2</figure>
+		</div>
+	</section>
+
+	<section id="options">
+		<p><button id="flip">Flip Card</button></p>
+	</section>
+
+	<script src="assetsFor13/utils.js"></script>
+	<script src="assetsFor13/flip-card.js"></script>
+
+  
+	<footer>
+		<p id="disclaimer">Sorry, your browser does not support CSS 3D transforms. Try viewing this page in <a href="http://www.apple.com/safari/">Safari</a>, <a href="http://www.google.com/chrome">Chrome</a>, <a href="http://www.mozilla.org/en-US/firefox/channel/">Firefox Aurora</a>, or on an iOS device.</p>
+		<p>Example for <a href="https://desandro.github.io/3dtransforms/docs/card-flip.html">Intro to CSS 3D transforms</a> by David DeSandro</p>
+	</footer>
+
+</body>
+
+</html>
