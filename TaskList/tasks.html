@@ -1,88 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Task list</title>
-	<!-- Main Stylesheet -->
-	<link rel="stylesheet" type="text/css" href="styles/tasks.css"/>
-    <!-- Custom Stylesheet -->
-    <!--<link rel="stylesheet" type="text/css" href="styles/custom.css"/>-->
-	<!-- Google Fonts -->
-	<link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
-	<!-- jQuery 3.x CDN -->
-	<script src="assets/js/jquery-3.1.0.js"></script>
-    <!-- jQuery plugin-->
-    <script src="assets/js/jquery-tmpl.js"></script>
-	<!-- Custom javascript -->
-	<script src="assets/js/main.js"></script>
-</head>
-<body>
-	<header>
-		<span id="page-title">Task list</span>
-	</header>
-	<main>
-		<section id="taskCreation" class="not">
-			<form>
-				<div>
-					<label>Task</label> 
-					<input type="text" required="required"
-						name="task" class="large" placeholder="Breakfast at Tiffanys" />
-				</div>
-				<div>
-					<label>Required by</label> 
-					<input type="date" required="required" name="requiredBy" />
-				</div>
-				<div>
-					<label>Category</label> 
-					<select name="category">
-						<option value="Personal">Personal</option>
-						<option value="Work">Work</option>
-					</select>
-				</div>
-				<nav>
-					<a href="#" id="saveTask">Save task</a> <a href="#">Clear task</a>
-				</nav>
-			</form>
-		</section>
-		<section>
-			<table id="tblTasks">
-				<colgroup>
-					<col width="40%">
-					<col width="15%">
-					<col width="15%">
-                    <col width="30%">
-				</colgroup>
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Due</th>
-						<th>Category</th>
-                        <th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-			<nav>
-				<a href="#" id="btnAddTask">Add task</a>
-                <a href="#" id="btnDeleteSelectedTasks">Delete selected tasks</a>
-			</nav>
-		</section>
-	</main>
-	<footer>You have 3 tasks</footer>
-</body>
-<script id="taskRow" type="text/x-jQuery-tmpl">
-    <tr>
-        <td>${task}</td>
-        <td><time datetime="${requiredBy}">${requiredBy}</time></td>
-        <td>${category}</td>
-        <td>
-            <nav>
-                <a href="#">Edit</a>
-                <a href="#">Complete</a>
-                <a href="#" class="deleteRow">Delete</a>
-            </nav>
-        </td>
-    </tr>
-</script>
+    <head>
+        <meta charset="utf-8">
+        <title>Task list</title>
+        <!-- Main Stylesheet -->
+        <link rel="stylesheet" type="text/css" href="styles/tasks.css"/>
+        <!-- Custom Stylesheet -->
+        <!--<link rel="stylesheet" type="text/css" href="styles/custom.css"/>-->
+        <!-- Google Fonts -->
+        <link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+        <!-- jQuery 3.1.0  -->
+        <script src="scripts/jquery-3.1.0.js"></script>
+        <!-- jQuery plugin-->
+        <script src="scripts/jquery-tmpl.js"></script>
+        <!-- Serialization / Deserialization Plugin -->
+        <script src="scripts/jquery-serialization.js"></script>
+        <!-- Tasks Controller -->
+        <script src="scripts/tasks-controller.js"></script>
+    </head>
+    <body>
+        <header>
+            <span id="page-title">Task list</span>
+        </header>
+        <main id="taskPage">
+            <section id="taskCreation" class="not">
+                <form id="taskForm">
+                    <div>
+                        <label>Task</label>
+                        <input type="text" required="required"
+                            name="task" class="large" placeholder="Breakfast at Tiffany's" />
+                    </div>
+                    <div>
+                        <label>Required by</label>
+                        <input type="date" required="required" name="requiredBy" />
+                    </div>
+                    <div>
+                        <label>Category</label>
+                        <select name="category">
+                            <option value="Personal">Personal</option>
+                            <option value="Work">Work</option>
+                        </select>
+                    </div>
+                    <nav>
+                        <a href="#" id="saveTask">Save task</a>
+                        <a href="#" id="clearTask">Clear task</a>
+                    </nav>
+                </form>
+            </section>
+            <section>
+                <table id="tblTasks">
+                    <colgroup>
+                        <col width="40%">
+                        <col width="15%">
+                        <col width="15%">
+                        <col width="30%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Due</th>
+                            <th>Category</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <nav>
+                    <a href="#" id="btnAddTask">Add task</a>
+                    <a href="#" id="btnDeleteSelectedTasks">Delete selected tasks</a>
+                </nav>
+            </section>
+        </main>
+        <footer>You have 3 tasks</footer>
+    </body>
+    <script id="taskRow" type="text/x-jQuery-tmpl">
+        <tr>
+            <td>${task}</td>
+            <td><time datetime="${requiredBy}">${requiredBy}</time></td>
+            <td>${category}</td>
+            <td>
+                <nav>
+                    <a href="#">Edit</a>
+                    <a href="#">Complete</a>
+                    <a href="#" class="deleteRow">Delete</a>
+                </nav>
+            </td>
+        </tr>
+    </script>
+    <script>
+        $(document).ready(function() {
+            tasksController.init($('#taskPage'));
+        });
+    </script>
 </html>
