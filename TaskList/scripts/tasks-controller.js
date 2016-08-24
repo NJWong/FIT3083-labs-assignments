@@ -14,52 +14,85 @@ tasksController = function() {
 
     return {
         // Public data and methods
-        // ...
         init: function(page) {
 
             if (!initialised) {
                 $taskPage = page;
 
-                // Add star next to required fields
-                $('[required="required"]').prev('label').append('<span>*</span>').children('span').addClass('required');
+                /* Contextualising elements in first section */
+                var $taskCreation = $taskPage.find('#taskCreation');
+                var $taskForm = $taskCreation.find('#taskForm');
+                var $taskFormRequired = $taskForm.find('[required="required"]');
+                var $saveTask = $taskForm.find('#saveTask');
+                var $clearTask = $taskForm.find('#clearTask'); // not used yet...
 
-                // Style the table rows with alternate background colors
+                /* Contextualising elements in section section */
+                var $tblTasks = $taskPage.find('#tblTasks');
+                var $tableBody = $tblTasks.find('tbody');
+                var $btnAddTask = $taskPage.find('#btnAddTask')
+                var $btnDeleteSelection = $taskPage.find('#btnDeleteSelectedTasks');
+
+                /* Contextualise the task row template */
+                var $taskRowTmpl = $('#taskRow');
+
+                /* Show the 'required' fields in the form */
+                $taskFormRequired.prev('label').append('<span>*</span>').children('span').addClass('required');
+
+                /* Recolor the Table Rows */
                 var recolor = function() {
-                    $('tbody tr').removeClass('even');
-                    $('tbody tr:even').addClass('even');
-                }
+                    $tableBody.find('tr').removeClass('even');
+                    $tableBody.find('tr:even').addClass('even');
+                };
 
-                // Show the task creation section when the add task button is clicked
-                $('#btnAddTask').click(function(evt) {
+                /* Show New Task Form */
+                $btnAddTask.click(function(evt) {
                     evt.preventDefault();
-                    $('#taskCreation').removeClass('not');
+                    $taskCreation.removeClass('not');
                 });
 
-                // Add click event handler for tbody that toggles row highlighting
-                $('tbody').on('click', 'td', 'time', function(evt) {
+                /* Toggle Task Highlight */
+                $tableBody.on('click', 'td', 'time', function(evt) {
                     $(evt.target).closest('td').siblings().addBack().toggleClass('rowHighlight');
                 });
 
-                // Add click event handler to delete a row
-                $('#tblTasks tbody').on('click', '.deleteRow', function(evt) {
+                /* Delete Task */
+                $tableBody.on('click', '.deleteRow', function(evt) {
                     evt.preventDefault();
                     $(evt.target).parents('tr').remove();
                     recolor();
                 });
 
-                // Add click event handler to save a task
-                $('#saveTask').click(function(evt) {
-                    evt.preventDefault();
-                    var task = $('form').toObject();
-                    $('#taskRow').tmpl(task).appendTo($('#tblTasks tbody'));
-                    recolor();
+                /* Set up the validation rules for the form */
+                $taskForm.validate({
+                    rules: {
+                        task: {
+                            maxlength: 20
+                        }
+                    }
                 });
 
-                // Add click event handler to delete all selected rows
-                $('#btnDeleteSelectedTasks').click(function(evt) {
+                /* Custom jQuery validator messages */
+                jQuery.extend(jQuery.validator.messages, {
+                    maxlength: jQuery.validator.format("Custom: This field accepts a maxmimum of {0} characters.")
+                });
+
+                /* Save Task */
+                $saveTask.click(function(evt) {
                     evt.preventDefault();
 
-                    var $highlighted = $('tbody tr td:first-child[class="rowHighlight"]');
+                    // Check if the form is valid
+                    if ($taskForm.valid()) {
+                        var task = $taskForm.toObject();
+                        $taskRowTmpl.tmpl(task).appendTo($tableBody);
+                        recolor();
+                    }
+                });
+
+                /* Delete Selected Tasks */
+                $btnDeleteSelection.click(function(evt) {
+                    evt.preventDefault();
+
+                    var $highlighted = $tableBody.find('tr td:first-child[class="rowHighlight"]');
                     var num_selected_tasks = $highlighted.length;
 
                     if (num_selected_tasks === 0) {
