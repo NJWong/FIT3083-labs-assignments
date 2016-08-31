@@ -1,23 +1,24 @@
-function closureObject() {
-    var i = 0;
-    return {
-        addOne: function() {
-            return ++i;
-        }
-    };
-}
-
 tasksController = function() {
     // Private data and methods
     var $taskPage;
     var initialised = false;
 
+    function errorLogger(errorCode, errorMessage) {
+        console.log(errorCode + ':' + errorMessage);
+    }
+
     return {
         // Public data and methods
-        init: function(page) {
-
-            if (!initialised) {
+        init: function(page, callback) {
+            if (initialised) {
+                callback();
+            }
+            else {
                 $taskPage = page;
+
+                storageEngine.init(function() {
+                    storageEngine.initObjectStore('task', function() {callback();}, errorLogger);
+                }, errorLogger);
 
                 /* Contextualising elements in first section */
                 var $taskCreation = $taskPage.find('#taskCreation');
@@ -58,8 +59,11 @@ tasksController = function() {
                 /* Delete Task */
                 $tableBody.on('click', '.deleteRow', function(evt) {
                     evt.preventDefault();
-                    $(evt.target).parents('tr').remove();
-                    recolor();
+                    storageEngine.delete('task', $(evt.target).data().taskId,
+                        function() {
+                            $(evt.target).parents('tr').remove();
+                            recolor();
+                        }, errorLogger);
                 });
 
                 /* Set up the validation rules for the form */
@@ -83,8 +87,16 @@ tasksController = function() {
                     // Check if the form is valid
                     if ($taskForm.valid()) {
                         var task = $taskForm.toObject();
-                        $taskRowTmpl.tmpl(task).appendTo($tableBody);
-                        recolor();
+
+                        storageEngine.save("task", task,
+                            function() {
+                                $taskPage.find('#tblTasks tbody').empty();
+                                tasksController.loadTasks();
+                                $(':input').val('');
+                                $taskPage.find('#taskCreation').addClass('not');
+                                // $taskRowTmpl.tmpl(task).appendTo($tableBody);
+                                recolor();
+                            }, errorLogger);
                     }
                 });
 
@@ -113,8 +125,25 @@ tasksController = function() {
                     }
                 });
 
+                /* Edit Task */
+                $taskPage.find('#tblTasks tbody').on('click', '.editRow', function(evt) {
+                    $taskPage.find('#taskCreation').removeClass('not');
+                    storageEngine.findById('task', $(evt.target).data().taskId,
+                        function(task) {
+                            $taskPage.find('form').fromObject(task);
+                        }, errorLogger);
+                });
+
                 initialised = true;
             }
+        },
+        loadTasks: function() {
+            storageEngine.findAll('task', function(tasks) {
+                $.each(tasks,function(index, task) {
+                    $('#taskRow').tmpl(task).appendTo('#tblTasks tbody');
+                });
+            }, errorLogger);
         }
     }
 }();
+
