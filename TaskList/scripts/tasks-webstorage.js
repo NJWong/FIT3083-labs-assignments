@@ -1,7 +1,8 @@
 storageEngine = function() {
     /* Private closure environment */
     var initialized = false;
-    var initializedObjectStores = {};
+    var initializedObjectStore = {};
+
     function getStorageObject(type) {
         var item = localStorage.getItem(type);
         var parsedItem = JSON.parse(item);
@@ -25,11 +26,11 @@ storageEngine = function() {
             }
             else if (!localStorage.getItem(type)) { // no store for specified type
                 localStorage.setItem(type, JSON.stringify({}));
-                initializedObjectStores[type] = true;
+                initializedObjectStore[type] = true;
                 successCallback(null);
             }
             else if (localStorage.getItem(type)) { // existing store for specified type found
-                initializedObjectStores[type] = true;
+                initializedObjectStore[type] = true;
                 successCallback(null);
             }
         },
@@ -37,7 +38,7 @@ storageEngine = function() {
             if (!initialized) {
                 errorCallback('storage_api_not_initialized', 'The storage engine has not been initialized');
             }
-            else if (!initializedObjectStores[type]) {
+            else if (!initializedObjectStore[type]) {
                 errorCallback('store_not_initialized', 'The object store ' + type + ' has not been initialized');
             }
             else {
@@ -54,7 +55,7 @@ storageEngine = function() {
             if (!initialized) {
                 errorCallback('storage_api_not_initialized', 'The storage engine has not been initialized');
             }
-            else if (!initializedObjectStores[type]) {
+            else if (!initializedObjectStore[type]) {
                 errorCallback('store_not_initialized', '2. The object store ' + type + ' has not been initialized');
             }
             else {
@@ -70,7 +71,7 @@ storageEngine = function() {
             if (!initialized) {
                 errorCallback('storage_api_not_initialized', 'The storage engine has not been initialized');
             }
-            else if (!initializedObjectStores[type]) {
+            else if (!initializedObjectStore[type]) {
                 errorCallback('store_not_initialized', '2. The object store ' + type + ' has not been initialized');
             }
             else {
@@ -89,7 +90,7 @@ storageEngine = function() {
             if (!initialized) {
                 errorCallback('storage_api_not_initialized', 'The storage engine has not been initialized');
             }
-            else if (!initializedObjectStores[type]) {
+            else if (!initializedObjectStore[type]) {
                 errorCallback('store_not_initialized', '2. The object store ' + type + ' has not been initialized');
             }
             else {
@@ -107,7 +108,7 @@ storageEngine = function() {
             if (!initialized) {
                 errorCallback('storage_api_not_initialized', 'The storage engine has not been initialized');
             }
-            else if (!initializedObjectStores[type]) {
+            else if (!initializedObjectStore[type]) {
                 errorCallback('store_not_initialized', '2. The object store ' + type + ' has not been initialized');
             }
             else {

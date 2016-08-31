@@ -88,7 +88,7 @@ tasksController = function() {
                             function() {
                                 // Update the UI on success
                                 $this_row.closest('tr').remove();
-                                recolor();
+                                console.log("Done");
                             }, errorLogger);
                         });
 
