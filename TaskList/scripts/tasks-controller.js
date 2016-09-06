@@ -8,10 +8,6 @@ tasksController = function() {
     }
 
     function updateTaskCount() {
-        // var count = $taskPage.find("#tblTasks tbody tr").length;
-
-
-
         $("footer").find("#tasksCounter").text(taskCount);
     }
 
@@ -44,8 +40,6 @@ tasksController = function() {
     function loadFromCSV(event) {
         var reader = new FileReader();
         reader.onload = function(evt) {
-            console.log(evt.target.result);
-
             var contents = evt.target.result;
             var lines = contents.split('\n');
             var tasks = [];
@@ -153,7 +147,6 @@ tasksController = function() {
 
                         // For each of the highlighted rows
                         $highlighted.each(function() {
-
                             var $this_row = $(this);
 
                             // Delete from the storage engine
