@@ -133,6 +133,7 @@ tasksController = function() {
                     storageEngine.delete('task', $(evt.target).data().taskId,
                         function() {
                             $(evt.target).parents('tr').remove();
+                            taskCount -= 1;
                             updateTaskCount();
                             recolor();
                         }, errorLogger);
@@ -160,10 +161,13 @@ tasksController = function() {
                             function() {
                                 // Update the UI on success
                                 $this_row.closest('tr').remove();
-                                updateTaskCount();
-                                recolor();
                             }, errorLogger);
                         });
+
+                        recolor();
+
+                        taskCount = $highlighted.length
+                        updateTaskCount();
 
                         // Need to put the alert in a setTimeout since alert boxes are blocking
                         setTimeout(function() {
@@ -250,13 +254,15 @@ tasksController = function() {
                     return date1.compareTo(date2);
                 });
 
+                /* Add the UI elements */
                 $.each(tasks, function(index, task) {
                     $('#taskRow').tmpl(task).appendTo('#tblTasks tbody');
-                    console.log(taskCount);
-                    updateTaskCount();
-                    recolor();
                 });
+                recolor();
 
+                /* Update the task counter */
+                taskCount = tasks.length;
+                updateTaskCount();
             }, errorLogger);
         }
     }
