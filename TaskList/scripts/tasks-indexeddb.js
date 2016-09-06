@@ -103,6 +103,33 @@ storageEngine = function() {
 			//The transaction callbacks cannot fire until the last operation callback has fired
 			//btw this suggests how to create a multiple operation transaction: call the second operation in the success callback of the first etc. (not sure about this, could be wrong)
 	    },
+
+		saveAll: function(type, objArray, successCallback, errorCallback) {
+	    	if (!database)
+				errorCallback('storage_api_not_initialized', 'The storage engine has not been initialized');
+			var tx = database.transaction([type], "readwrite");
+			tx.oncomplete = function(event){ //ASYNC
+				successCallback(objArray); //callback passed in by caller of save, it actually doesn't use obj as it refreshes the entire task table with all stored tasks
+			};
+			tx.onerror = function(event){
+				errorCallback('transaction_error', 'It is not possible to store the object');
+			};
+
+			var objectStore = tx.objectStore(type);
+			$.each(objArray, function(i, obj) {
+				if (!obj.id)
+					delete obj.id;
+				else
+					obj.id = parseInt(obj.id);
+				var request = objectStore.put(obj);
+				request.onsuccess = function(event) {
+					//obj.id = event.target.result;
+				};
+				request.onerror = function(event) {
+					errorCallback('object_not_stored', 'It is not possible to store the object');
+				};
+			});
+		},
 		
 	    findAll : function(type, successCallback, errorCallback) { 
 	    	if (!database) {

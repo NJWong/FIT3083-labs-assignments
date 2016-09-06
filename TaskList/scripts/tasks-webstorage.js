@@ -51,6 +51,25 @@ storageEngine = function() {
                 successCallback(obj);
             }
         },
+        saveAll: function(type, objArray, successCallback, errorCallback) {
+            if (!initialized) {
+                errorCallback('storage_api_not_initialised', 'The storage engine has not been initialised');
+            }
+            else if (!initializedObjectStore[type]) {
+                errorCallback('store_not_initialised', '1. The object store ' + type + ' has not been initialised');
+            }
+            else {
+                var storageItem = getStorageObject(type);
+                $.each(objArray, function(i, obj) {
+                    if(!obj.id) {
+                        obj.id = $.now();
+                    }
+                    storageItem[obj.id] = obj;
+                    localStorage.setItem(type, JSON.stringify(storageItem));
+                });
+                successCallback(objArray);
+            }
+        },
         findAll: function (type, successCallback, errorCallback) {
             if (!initialized) {
                 errorCallback('storage_api_not_initialized', 'The storage engine has not been initialized');

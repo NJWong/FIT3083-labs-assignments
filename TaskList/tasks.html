@@ -19,6 +19,10 @@
         <script src="scripts/tasks-controller.js"></script>
         <!-- jQuery Validate -->
         <script src="scripts/jquery-validation-1.15.0/dist/jquery.validate.js"></script>
+        <!-- Date Library -->
+        <script src="scripts/date.js"></script>
+        <!-- CSV Import Library -->
+        <script src="scripts/jquery.csv.js"></script>
     </head>
     <body>
         <header>
@@ -74,17 +78,25 @@
                 </nav>
             </section>
         </main>
-        <footer>You have 3 tasks</footer>
+        <section id="csvImport">
+            <div>
+                <label for="importFile">Import tasks from a CSV file</label>
+                <input type="file" name="importFile" id="importFile"/>
+            </div>
+        </section>
+        <footer>You have <span id="tasksCounter"></span> task(s)</footer>
     </body>
     <script id="taskRow" type="text/x-jQuery-tmpl">
         <tr>
-            <td data-task-id="${id}">${task}</td>
-            <td><time datetime="${requiredBy}">${requiredBy}</time></td>
-            <td>${category}</td>
+            <td {{if complete == true}}class="taskCompleted"{{/if}} data-task-id="${id}">${task}</td>
+            <td {{if complete == true}}class="taskCompleted"{{/if}}><time datetime="${requiredBy}">${requiredBy}</time></td>
+            <td {{if complete == true}}class="taskCompleted"{{/if}}>${category}</td>
             <td>
                 <nav>
-                    <a href="#" class="editRow" data-task-id="${id}">Edit</a>
-                    <a href="#">Complete</a>
+                    {{if complete != true}}
+                        <a href="#" class="editRow" data-task-id="${id}">Edit</a>
+                        <a href="#" class="completeRow" data-task-id="${id}">Complete</a>
+                    {{/if}}
                     <a href="#" class="deleteRow" data-task-id="${id}">Delete</a>
                 </nav>
             </td>
