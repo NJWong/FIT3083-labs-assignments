@@ -161,12 +161,11 @@ tasksController = function() {
                             function() {
                                 // Update the UI on success
                                 $this_row.closest('tr').remove();
+                                recolor();
                             }, errorLogger);
                         });
 
-                        recolor();
-
-                        taskCount = $highlighted.length
+                        taskCount -= $highlighted.length
                         updateTaskCount();
 
                         // Need to put the alert in a setTimeout since alert boxes are blocking
@@ -257,12 +256,10 @@ tasksController = function() {
                 /* Add the UI elements */
                 $.each(tasks, function(index, task) {
                     $('#taskRow').tmpl(task).appendTo('#tblTasks tbody');
+                    taskCount = tasks.length;
+                    updateTaskCount();
+                    recolor();
                 });
-                recolor();
-
-                /* Update the task counter */
-                taskCount = tasks.length;
-                updateTaskCount();
             }, errorLogger);
         }
     }
