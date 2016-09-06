@@ -8,8 +8,11 @@ tasksController = function() {
     }
 
     function updateTaskCount() {
-        var count = $taskPage.find("#tblTasks tbody tr").length;
-        $("footer").find("#tasksCounter").text(count);
+        // var count = $taskPage.find("#tblTasks tbody tr").length;
+
+
+
+        $("footer").find("#tasksCounter").text(taskCount);
     }
 
     function clearTask() {
@@ -157,6 +160,8 @@ tasksController = function() {
                             function() {
                                 // Update the UI on success
                                 $this_row.closest('tr').remove();
+                                updateTaskCount();
+                                recolor();
                             }, errorLogger);
                         });
 
@@ -194,9 +199,7 @@ tasksController = function() {
                         task.complete = false;
                         storageEngine.save("task", task,
                             function() {
-                                // $taskPage.find('#tblTasks tbody').empty();
                                 tasksController.loadTasks();
-                                // $(':input').val('');
                                 clearTask();
                                 $taskPage.find('#taskCreation').addClass('not');
                             }, errorLogger);
@@ -247,11 +250,13 @@ tasksController = function() {
                     return date1.compareTo(date2);
                 });
 
-                $.each(tasks,function(index, task) {
+                $.each(tasks, function(index, task) {
                     $('#taskRow').tmpl(task).appendTo('#tblTasks tbody');
+                    console.log(taskCount);
                     updateTaskCount();
                     recolor();
                 });
+
             }, errorLogger);
         }
     }

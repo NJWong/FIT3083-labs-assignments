@@ -103,6 +103,8 @@
         </tr>
     </script>
     <script>
+        taskCount = 0;
+
         if (window.indexedDB) {
             $.getScript("scripts/tasks-indexeddb.js")
             .done(function(script, textStatus) {
